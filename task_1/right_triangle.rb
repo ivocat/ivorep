@@ -9,6 +9,9 @@ if sides.length < 3
 elsif sides.length > 3
   puts "Вы ввели больше трёх сторон"
   exit
+elsif sides.inject(:*) == 0
+  puts "Такого треугольника быть не может"
+  exit
 end
 
 isosceles = (sides[0] == sides [1]) || (sides[0] == sides[2]) || (sides[1] == sides[2])
