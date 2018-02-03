@@ -1,6 +1,5 @@
 puts "Введите длины трёх сторон треугольника через запятую"
-sides = gets.chomp.gsub(" ","").split(",")
-sides.sort!.map! {|s| s.to_f}
+sides = gets.chomp.split(",").map(&:to_f).sort
 
 if sides.length < 3
   puts "Вы ввели меньше трёх сторон"
@@ -8,12 +7,12 @@ if sides.length < 3
 elsif sides.length > 3
   puts "Вы ввели больше трёх сторон"
   exit
-elsif sides.inject(:*) == 0
+elsif sides.any?(&:zero?)
   puts "Вы ввели неправильные данные"
   exit
 end
 
-isosceles = (sides[0] == sides [1]) || (sides[0] == sides[2]) || (sides[1] == sides[2])
+isosceles = sides[0] == sides [1] || sides[0] == sides[2] || sides[1] == sides[2]
 right = (sides[2]**2).round(3) == ( sides[0]**2 + sides[1]**2 ).round(3)
 
 if isosceles && right
