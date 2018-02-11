@@ -13,6 +13,4 @@ months_v_days = {
   December: 31
 }
 
-months_v_days.each {|month,day|
-puts month if day == 30
-}
+months_v_days.each { |month, day| puts month if day == 30 }
