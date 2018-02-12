@@ -16,9 +16,10 @@ end
 total_price = 0
 
 shop_list.each do |name, subtotal|
+  subtotal_number = subtotal[:price] * subtotal[:quantity]
   puts "#{name} x#{subtotal[:quantity].round(2)}; "\
   "цена: #{subtotal[:price].round(2)}. "\
-  "Сумма: #{( subtotal[:quantity] * subtotal[:price] ).round(2)}"
-  total_price += subtotal[:price] * subtotal[:quantity]
+  "Сумма: #{subtotal_number.round(2)}"
+  total_price += subtotal_number
 end
 puts "Итоговая сумма покупок: #{total_price.round(2)}"
