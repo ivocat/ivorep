@@ -1,41 +1,42 @@
 class Station
-  attr_reader :trains_list, :name
+  attr_reader :trains, :name
 
   def initialize(name)
     @name = name
-    @trains_list = []
+    @trains = []
   end
 
   def accommodate(train)
-    @trains_list << train
+    @trains << train
   end
 
   def depart(train)
-    @trains_list.delete(train)
+    @trains.delete(train)
   end
 
-  def trains_list_by_type(desired_type)
-    @trains_list.select {|train| train.type == desired_type}
+  def trains_by_type(desired_type)
+    @trains.select {|train| train.type == desired_type}
   end
 end
 
 class Route
-  attr_reader :route
+  attr_reader :stations
 
   def initialize(departure_station, terminal_station)
-    @route = [departure_station, terminal_station]
+    @stations = [departure_station, terminal_station]
   end
 
   def add_train_stop(station, previous_station)
-    previous_num = @route.rindex(previous_station)
-    if previous_num != nil && previous_station != @route[-1]
-      @route.insert(previous_num + 1,station)
+    return unless @stations.include?(previous_station)
+    previous_num = @stations.index(previous_station)
+    if previous_station != @stations[-1]
+      @stations.insert(previous_num + 1,station)
     end
   end
 
   def remove_train_stop(station)
-    if station != @route[0] && station != @route[-1]
-      @route.delete(station)
+    if station != @stations[0] && station != @stations[-1]
+      @stations.delete(station)
     end
   end
 end
@@ -48,13 +49,11 @@ class Train
     @type = type.to_sym
     @cars_number = cars_number.to_i
     @speed = 0
-    @route = []
-    @location = 0
   end
 
-  def speed_change(speed_value)
+  def speed_delta(speed_value)
     @speed += speed_value
-    @speed = 0 if @speed < 0
+    @speed = [@speed + speed_value, 0].max
   end
 
   def full_stop
@@ -66,39 +65,46 @@ class Train
   end
 
   def car_remove
-    @cars_number -= 1 if @speed == 0
+    @cars_number -= 1 if @speed == 0 && @cars_number > 0
   end
 
-  def get_route(route_object)
-    @route = route_object.route
-    @route[0].accommodate(self)
+  def set_route(route_object)
+    @route = route_object
+    @location = 0
+    self.current_station.accommodate(self)
   end
 
   def move_forward
-    unless @location == @route.length - 1
-      @route[@location].depart(self)
-      @location += 1
-      @route[@location].accommodate(self)
-    end
+    return if last_station?
+    @route.stations[@location].depart(self)
+    @location += 1
+    @route.stations[@location].accommodate(self)
   end
 
   def move_back
-    unless @location == 0
-      @route[@location].depart(self)
-      @location -= 1
-      @route[@location].accommodate(self)
-    end
+    return if first_station?
+    @route.stations[@location].depart(self)
+    @location -= 1
+    @route.stations[@location].accommodate(self)
   end
 
   def current_station
-    @route[@location]
+    @route.stations[@location]
   end
 
   def previous_station
-    @route[@location-1] unless @location == 0
+    @route.stations[@location-1] unless first_station?
   end
 
   def next_station
-    @route[@location+1] unless @location == @route.length - 1
+    @route.stations[@location+1] unless last_station?
+  end
+  
+  def first_station?
+    @location == 0
+  end
+  
+  def last_station?
+    @location == @route.stations.length - 1
   end
 end
