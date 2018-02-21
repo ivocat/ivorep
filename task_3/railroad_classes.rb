@@ -27,8 +27,8 @@ class Route
   end
 
   def add_train_stop(station, previous_station)
-    return unless @stations.include?(previous_station)
     previous_num = @stations.index(previous_station)
+    return if previous_num.nil? || previous_num == @stations.length - 1
     if previous_station != @stations[-1]
       @stations.insert(previous_num + 1,station)
     end
@@ -68,10 +68,10 @@ class Train
     @cars_number -= 1 if @speed == 0 && @cars_number > 0
   end
 
-  def set_route(route_object)
+  def route(route_object)
     @route = route_object
     @location = 0
-    self.current_station.accommodate(self)
+    current_station.accommodate(self)
   end
 
   def move_forward
@@ -97,7 +97,7 @@ class Train
   end
 
   def next_station
-    @route.stations[@location+1] unless last_station?
+    @route.stations[@location+1] #unless last_station?
   end
   
   def first_station?
