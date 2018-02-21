@@ -1,10 +1,9 @@
 class Train
-  attr_reader :cars_number, :type, :number, :speed
+  attr_reader :cars, :number, :speed
 
-  def initialize(number, type, cars_number)
+  def initialize(number)
     @number = number.to_s
-    @type = type.to_sym
-    @cars_number = cars_number.to_i
+    @cars = []
     @speed = 0
   end
 
@@ -17,12 +16,12 @@ class Train
     @speed = 0
   end
 
-  def car_add
-    @cars_number += 1 if @speed == 0
+  def car_add(new_car)
+    @cars << new_car
   end
 
   def car_remove
-    @cars_number -= 1 if @speed == 0 && @cars_number > 0
+    @cars.pop if @speed == 0 && @cars.any?
   end
 
   def route(route_object)
@@ -57,11 +56,15 @@ class Train
     @route.stations[@location+1] #unless last_station?
   end
   
+  protected
+  
+  #Методы ниже используются только другими методами, извне их вызывать незачем, но наследоваться должны
+  
   def first_station?
     @location == 0
   end
   
-  def last_station?
+  def last_station? 
     @location == @route.stations.length - 1
   end
 end
