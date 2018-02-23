@@ -7,9 +7,11 @@ require_relative "cargo_car"
 require_relative "cargo_train"
 require_relative "passenger_car"
 require_relative "passenger_train"
+require_relative "controller"
 require_relative "menu"
 
-menu = Menu.new
+controller = Controller.new
+menu = Menu.new(controller)
 
 loop do
   menu.execute

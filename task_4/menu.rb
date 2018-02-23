@@ -1,7 +1,9 @@
+require_relative "controller"
+
 class Menu
 
-  def initialize
-    #something to put here
+  def initialize (controller)
+    @controller = controller
   end
 
   def execute
@@ -19,7 +21,15 @@ class Menu
       puts "1. Просмотреть все станции
       2. Создать станцию
       0. Вернуться назад"
-      input = gets.to_i
+      #создать станцию нельзя, если имя уже занято
+      input_sub = gets.to_i
+      case input_sub
+      when 1
+        controller.stations_list
+      when 2
+        controller.create_station
+      else #go back
+      end
     when 2
       puts "1. Создать маршрут
       2. Добавить станцию в маршрут
@@ -30,22 +40,46 @@ class Menu
       #станцию нельзя удалить, если на ней поезд
       input_sub = gets.to_i
       case input_sub
-      when 1 #do_1
-      when 2 #do_2
-      when 3 #do_3
-      else #go back
+      when 1
+        exit #do_1
+      when 2
+        exit #do_2
+      when 3
+        exit #do_3
+      else
+        exit #go back
+      end
     when 3
       puts "1. Создать поезд
       2. Добавить вагон в поезд
       3. Отцепить вагон от поезда
       0. Вернуться назад"
       input_sub = gets.to_i
+      case input_sub
+      when 1
+        exit #do_1
+      when 2
+        exit #do_2
+      when 3
+        exit #do_3
+      else
+        exit #go back
+      end
     when 4
       puts "1. Присвоить маршрут поезду
       2. Переместить поезд вперёд по маршруту
       3. Переместить поезд назад по маршруту
       0. Вернуться назад"
       input_sub = gets.to_i
+      case input_sub
+      when 1
+        exit #do_1
+      when 2
+        exit #do_2
+      when 3
+        exit #do_3
+      else #go back
+      end
     when 5
       exit
     else
