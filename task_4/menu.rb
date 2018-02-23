@@ -1,6 +1,7 @@
 require_relative "controller"
 
 class Menu
+  attr_reader :controller
 
   def initialize (controller)
     @controller = controller
