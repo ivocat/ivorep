@@ -78,12 +78,16 @@ class Controller
       route_choose_prompt
       print "> "
       input_num = gets.to_i
-      puts "Введите название новой станции в маршруте:"
-      new_station = gets.chomp.capitalize #плюс проверки сущ-я станции
-      puts "Введите название станции, после которой следует добавить новую:"
-      after_station = gets.chomp.capitalize #плюс проверки сущ-я станции
-      @routes[input_num - 1].add_train_stop(@stations[new_station], @stations[after_station])
-      puts "Станция добавлена в маршрут!"
+      if @routes[input_num - 1].assigned == false
+        puts "Введите название новой станции в маршруте:"
+        new_station = gets.chomp.capitalize #плюс проверки сущ-я станции
+        puts "Введите название станции, после которой следует добавить новую:"
+        after_station = gets.chomp.capitalize #плюс проверки сущ-я станции
+        @routes[input_num - 1].add_train_stop(@stations[new_station], @stations[after_station])
+        puts "Станция добавлена в маршрут!"
+      else
+        puts "Маршрут уже назначен поезду, станции добавлять нельзя."
+      end
     end
   end
 
@@ -94,10 +98,14 @@ class Controller
       route_choose_prompt
       print "> "
       input_num = gets.to_i
-      puts "Введите название удаляемой станции:"
-      deleted_station = gets.chomp.capitalize
-      @routes[input_num - 1].remove_train_stop(@stations[deleted_station])
-      puts "Станция удалена!" #может и не удалена, если первая/последняя
+      if @routes[input_num - 1].assigned == false
+        puts "Введите название удаляемой станции:"
+        deleted_station = gets.chomp.capitalize
+        @routes[input_num - 1].remove_train_stop(@stations[deleted_station])
+        puts "Станция удалена!" #может и не удалена, если первая/последняя
+      else
+        puts "Маршрут уже назначен поезду, станции удалять нельзя."
+      end
     end
   end
 
@@ -157,6 +165,7 @@ class Controller
     puts "Введите номер поезда, которому следует присвоить маршрут:"
     number = gets.chomp
     @trains[number].route(@routes[input_num - 1])
+    @routes[input_num - 1].assigned = true
   end
 
   def route_move_train_forward

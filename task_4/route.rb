@@ -1,8 +1,10 @@
 class Route
   attr_reader :stations
+  attr_accessor :assigned
 
   def initialize(departure_station, terminal_station)
     @stations = [departure_station, terminal_station]
+    @assigned = false
   end
 
   def add_train_stop(station, previous_station)
