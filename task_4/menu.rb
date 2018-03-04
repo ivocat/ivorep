@@ -14,23 +14,23 @@ class Menu
     puts "3. Конструктор поездов"
     puts "4. Управление поездами"
     puts "5. Выход"
-
+    print "> "
     input = gets.to_i
 
     case input
     when 1
       puts "\nУПРАВЛЕНИЕ СТАНЦИЯМИ:"
-      puts "1. Просмотреть все станции"
-      puts "2. Создать станцию"
+      puts "1. Создать станцию"
+      puts "2. Просмотреть все станции"
       puts "0. Вернуться назад"
-      #создать станцию нельзя, если имя уже занято
+      print "> "
       input_sub = gets.to_i
       puts "\n"
       case input_sub
       when 1
-        controller.stations_list
-      when 2
         controller.create_station
+      when 2
+        controller.stations_list
       else #go back
       end
     when 2
@@ -39,6 +39,7 @@ class Menu
       puts "2. Добавить станцию в маршрут"
       puts "3. Удалить станцию из маршрута"
       puts "0. Вернуться назад"
+      print "> "
       #создать маршрут нельзя, если станций не хватает
       #добавить станцию нельзя, если станций нет
       #станцию нельзя удалить, если на ней поезд
@@ -46,7 +47,7 @@ class Menu
       puts "\n"
       case input_sub
       when 1
-        exit #do_1
+        controller.create_route
       when 2
         exit #do_2
       when 3
@@ -60,6 +61,7 @@ class Menu
       puts "2. Добавить вагон в поезд"
       puts "3. Отцепить вагон от поезда"
       puts "0. Вернуться назад"
+      print "> "
       input_sub = gets.to_i
       puts "\n"
       case input_sub
@@ -78,6 +80,7 @@ class Menu
       puts "2. Переместить поезд вперёд по маршруту"
       puts "3. Переместить поезд назад по маршруту"
       puts "0. Вернуться назад"
+      print "> "
       input_sub = gets.to_i
       puts "\n"
       case input_sub
