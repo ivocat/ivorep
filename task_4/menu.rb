@@ -10,7 +10,7 @@ class Menu
   def execute
     puts "\nВыберите действие:"
     puts "1. Управление станциями"
-    puts "2. Создание маршрутов"
+    puts "2. Управление маршрутами"
     puts "3. Конструктор поездов"
     puts "4. Управление поездами"
     puts "5. Выход"
@@ -34,10 +34,11 @@ class Menu
       else #go back
       end
     when 2
-      puts "\nСОЗДАНИЕ МАРШРУТОВ:"
+      puts "\nУПРАВЛЕНИЕ МАРШРУТАМИ:"
       puts "1. Создать маршрут"
-      puts "2. Добавить станцию в маршрут"
-      puts "3. Удалить станцию из маршрута"
+      puts "2. Просмотреть все маршруты"
+      puts "3. Добавить станцию в маршрут"
+      puts "4. Удалить станцию из маршрута"
       puts "0. Вернуться назад"
       print "> "
       #создать маршрут нельзя, если станций не хватает
@@ -49,11 +50,12 @@ class Menu
       when 1
         controller.create_route
       when 2
-        exit #do_2
+        controller.route_list
       when 3
-        exit #do_3
-      else
-        exit #go back
+        controller.add_station_to_route
+      when 4
+        controller.remove_station_from_route
+      else #go back
       end
     when 3
       puts "\nКОНСТРУКТОР ПОЕЗДОВ:"
@@ -66,13 +68,12 @@ class Menu
       puts "\n"
       case input_sub
       when 1
-        exit #do_1
+        controller.create_train
       when 2
-        exit #do_2
+        controller.add_car_to_train
       when 3
-        exit #do_3
-      else
-        exit #go back
+        controller.remove_car_from_train
+      else #go back
       end
     when 4
       puts "\nУПРАВЛЕНИЕ ПОЕЗДАМИ:"
@@ -85,11 +86,11 @@ class Menu
       puts "\n"
       case input_sub
       when 1
-        exit #do_1
+        controller.assign_route_to_train
       when 2
-        exit #do_2
+        controller.route_move_train_forward
       when 3
-        exit #do_3
+        controller.route_move_train_back
       else #go back
       end
     when 5

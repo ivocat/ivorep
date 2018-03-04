@@ -11,9 +11,9 @@ require_relative "passenger_train"
 class Controller
   def initialize
     @stations = {}
-    @trains = []
+    @trains = {}
     @routes = []
-    @cars = []
+    @cars = {}
   end
 
   def stations_list
@@ -31,6 +31,7 @@ class Controller
             print "#{train.number}, " if index < station.trains.size - 1
             print "#{train.number}." if index == station.trains.size - 1
           end
+          puts ""
         end
       end
     end
@@ -64,12 +65,12 @@ class Controller
       puts "Такой станции нет!"
       return
     end
-    @routes << Route.new(first_station, last_station)
+    @routes << Route.new(@stations[first_station], @stations[last_station])
     puts "Маршрут #{first_station} — #{last_station} создан."
   end
 
   def add_station_to_route
-    if @routes.empty?
+    if no_routes?
       puts "Ни одного маршрута ещё не создано."
     elsif stations_not_enough?
       puts "Недостаточно станций для дополнения маршрута."
@@ -81,21 +82,21 @@ class Controller
       new_station = gets.chomp.capitalize #плюс проверки сущ-я станции
       puts "Введите название станции, после которой следует добавить новую:"
       after_station = gets.chomp.capitalize #плюс проверки сущ-я станции
-      @routes[input_num - 1].add_train_stop(new_station, after_station)
+      @routes[input_num - 1].add_train_stop(@stations[new_station], @stations[after_station])
       puts "Станция добавлена в маршрут!"
     end
   end
 
   def remove_station_from_route
-    if @routes.empty?
+    if no_routes?
       puts "Ни одного маршрута ещё не создано."
     else
       route_choose_prompt
       print "> "
       input_num = gets.to_i
       puts "Введите название удаляемой станции:"
-      delete_station = gets.chomp.capitalize
-      @routes[input_num - 1].remove_train_stop(delete_station)
+      deleted_station = gets.chomp.capitalize
+      @routes[input_num - 1].remove_train_stop(@stations[deleted_station])
       puts "Станция удалена!" #может и не удалена, если первая/последняя
     end
   end
@@ -106,10 +107,10 @@ class Controller
     puts "Тип поезда:\n1. Пассажирский\n2. Товарный"
     type = gets.to_i
     if type == 1
-      @trains << PassengerTrain.new(number)
+      @trains[number] = PassengerTrain.new(number)
       puts "Пассажирский поезд #{number} создан!"
     elsif type == 2
-      @trains << CargoTrain.new(number)
+      @trains[number] = CargoTrain.new(number)
       puts "Грузовой поезд #{number} создан!"
     else
       puts "Неверно задан тип поезда."
@@ -117,9 +118,69 @@ class Controller
   end
 
   def add_car_to_train
+    puts "Введите номер поезда, к которому следует прицепить вагон:"
+    number = gets.chomp
+    unless @trains.key?(number)
+      puts "Такого поезда нет."
+      return
+    end
+    puts "Введите название вагона:"
+    car_name = gets.chomp
+    if @trains[number].is_a?(PassengerTrain)
+      @cars[car_name] = PassengerCar.new
+      @trains[number].car_add(@cars[car_name])
+    else
+      @cars[car_name] = CargoCar.new
+      @trains[number].car_add(@cars[car_name])
+    end
+    puts "Вагон прицеплен к поезду."
+  end
 
+  def remove_car_from_train
+    puts "Введите номер поезда, от которого следует отцепить вагон:"
+    number = gets.chomp
+    unless @trains.key?(number)
+      puts "Такого поезда нет."
+      return
+    end
+    @trains[number].car_remove
+  end
 
+  def assign_route_to_train
+    if no_trains?
+      puts "Поезда пока не созданы."
+      return
+    end
+    route_choose_prompt
+    print "> "
+    input_num = gets.to_i
+    puts "Введите номер поезда, которому следует присвоить маршрут:"
+    number = gets.chomp
+    @trains[number].route(@routes[input_num - 1])
+  end
 
+  def route_move_train_forward
+    puts "Введите номер перемещаемого поезда:"
+    number = gets.chomp
+    @trains[number].move_forward
+  end
+
+  def route_move_train_back
+    puts "Введите номер перемещаемого поезда:"
+    number = gets.chomp
+    @trains[number].move_back
+  end
+
+  def route_list
+    i = 0
+    loop do
+      print "#{i+1}. #{@routes[i].stations[0].name} — #{@routes[i].stations[-1].name}:"
+      @routes[i].stations.each {|station| print " #{station.name}"}
+      puts ""
+      i += 1
+      break if i == @routes.length
+    end
+  end
 
   protected
 
@@ -128,17 +189,20 @@ class Controller
   end
 
   def stations_not_enough?
-    @stations.length <= 2
+    @stations.length < 2
   end
 
   def route_choose_prompt
     puts "Выберите номер маршрута из списка:"
-    i = 0
-    loop do
-      puts "#{i+1}. #{@routes[i].stations[0]} — #{@routes[i].stations[-1]}"
-      i += 1
-      break if i == @routes.length
-    end
+    route_list
+  end
+
+  def no_trains?
+    @trains.empty?
+  end
+
+  def no_routes?
+    @routes.empty?
   end
 
 end
