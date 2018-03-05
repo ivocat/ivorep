@@ -13,6 +13,4 @@ require_relative "menu"
 controller = Controller.new
 menu = Menu.new(controller)
 
-loop do
-  menu.execute
-end
+menu.execute

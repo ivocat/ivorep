@@ -21,11 +21,12 @@ class Train
   end
 
   def car_remove
-    @cars.pop if @speed == 0 && @cars.any?
+    @cars.pop if @speed == 0
   end
 
   def route(route_object)
     @route = route_object
+    route_object.assigned = true
     @location = 0
     current_station.accommodate(self)
   end
@@ -55,16 +56,16 @@ class Train
   def next_station
     @route.stations[@location+1] #unless last_station?
   end
-  
+
   protected
-  
+
   #Методы ниже используются только другими методами, извне их вызывать незачем, но наследоваться должны
-  
+
   def first_station?
     @location == 0
   end
-  
-  def last_station? 
+
+  def last_station?
     @location == @route.stations.length - 1
   end
 end
