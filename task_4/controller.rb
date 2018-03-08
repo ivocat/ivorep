@@ -29,6 +29,7 @@ class Controller
               print "#{train.number}, "
             else
               print "#{train.number}."
+            end
           end
           puts ""
         end
@@ -184,15 +185,6 @@ class Controller
       print "#{i+1}. #{route[i].stations[first].name} — #{route[i].stations[last].name}:"
       route[i].stations.each {|station| print " #{station.name}"}
       puts ""
-
-
-    i = 0
-    loop do
-      print "#{i+1}. #{@routes[i].stations[0].name} — #{@routes[i].stations[-1].name}:"
-      @routes[i].stations.each {|station| print " #{station.name}"}
-      puts ""
-      i += 1
-      break if i == @routes.length
     end
   end
 

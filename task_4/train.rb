@@ -17,7 +17,7 @@ class Train
   end
 
   def car_add(new_car)
-    @cars << new_car
+    @cars << new_car if valid_car?(new_car)
   end
 
   def car_remove
@@ -67,5 +67,9 @@ class Train
 
   def last_station?
     @location == @route.stations.length - 1
+  end
+
+  def valid_car?(new_car)
+    raise NotImplementedError, 'Описать в дочерних классах'
   end
 end
