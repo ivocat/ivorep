@@ -205,7 +205,7 @@ class Menu
     number = gets.chomp
     puts "Тип поезда:\n1. Пассажирский\n2. Товарный"
     type = gets.to_i
-    type_string = ["Пассажирский", "Грузовой"]
+    type_string = ["Пассажирский", "Товарный"]
     case type
     when 1,2
       controller.create_train(number,type)
