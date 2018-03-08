@@ -10,7 +10,7 @@ class CargoTrain < Train
   protected
 
   def valid_car?(new_car)
-    new_car.is_a?(PassengerCar)
+    new_car.is_a?(CargoCar)
   end
 
 end
