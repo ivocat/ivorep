@@ -1,7 +1,7 @@
-require_relative "controller"
+require_relative "storage"
 require_relative "menu"
 
-controller = Controller.new
-menu = Menu.new(controller)
+storage = Storage.new
+menu = Menu.new(storage)
 
 menu.execute

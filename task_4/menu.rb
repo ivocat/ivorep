@@ -1,10 +1,10 @@
-require_relative "controller"
+require_relative "storage"
 
 class Menu
-  attr_reader :controller
+  attr_reader :storage
 
-  def initialize (controller)
-    @controller = controller
+  def initialize (storage)
+    @storage = storage
   end
 
   def execute
@@ -118,11 +118,11 @@ class Menu
   end
 
   def stations_list
-    if controller.stations.empty?
+    if storage.stations.empty?
       puts "Список станций пуст."
     else
       puts "Список станций:"
-      controller.stations.each_value do |station|
+      storage.stations.each_value do |station|
         print "#{station.name}"
         if station.trains == []
           print ", поездов нет.\n"
@@ -140,70 +140,70 @@ class Menu
   def create_station
     print "Введите название новой станции: "
     name = gets.chomp.capitalize
-    if controller.station_exists?(name)
+    if storage.station_exists?(name)
       puts "Станция с таким названием уже есть. Попробуйте \"#{name}-2\"."
     else
-      controller.create_station(name)
-      puts "Станция #{controller.stations[name].name} создана!"
+      storage.create_station(name)
+      puts "Станция #{storage.stations[name].name} создана!"
     end
   end
 
   def create_route
-    if controller.stations_not_enough?
+    if storage.stations_not_enough?
       puts "Недостаточно станций для создания маршрута."
       return
     end
     puts "Введите начальную станцию маршрута:"
     first_station = gets.chomp.capitalize
-    unless controller.station_exists?(first_station)
+    unless storage.station_exists?(first_station)
       puts "Такой станции нет!"
       return
     end
     puts "Введите конечную станцию маршрута:"
     last_station = gets.chomp.capitalize
-    unless controller.station_exists?(last_station)
+    unless storage.station_exists?(last_station)
       puts "Такой станции нет!"
       return
     end
-    controller.create_route(first_station, last_station)
+    storage.create_route(first_station, last_station)
     puts "Маршрут #{first_station} — #{last_station} создан."
   end
 
   def add_station_to_route
-    if controller.routes.empty?
+    if storage.routes.empty?
       puts "Ни одного маршрута ещё не создано."
-    elsif controller.stations_not_enough?
+    elsif storage.stations_not_enough?
       puts "Недостаточно станций для дополнения маршрута."
     else
       route_choose_prompt
       print "> "
       input_num = (gets.to_i) - 1
-      if controller.routes[input_num].assigned
+      if storage.routes[input_num].assigned
         puts "Маршрут уже назначен поезду, станции добавлять нельзя."
       else
         puts "Введите название новой станции в маршруте:"
         new_station = gets.chomp.capitalize #плюс проверки сущ-я станции
         puts "Введите название станции, после которой следует добавить новую:"
         after_station = gets.chomp.capitalize #плюс проверки сущ-я станции
-        controller.add_station_to_route(input_num,new_station,after_station)
+        storage.add_station_to_route(input_num,new_station,after_station)
         puts "Станция добавлена в маршрут!"
       end
     end
   end
 
   def remove_station_from_route
-    if controller.routes.empty?
+    if storage.routes.empty?
       puts "Ни одного маршрута ещё не создано."
     else
       route_choose_prompt
       print "> "
       input_num = (gets.to_i) - 1
-      if controller.routes[input_num].assigned
+      if storage.routes[input_num].assigned
         puts "Маршрут уже назначен поезду, станции удалять нельзя."
       else
         puts "Введите название удаляемой станции:"
         deleted_station = gets.chomp.capitalize
-        controller.remove_station_from_route(input_num,deleted_station)
+        storage.remove_station_from_route(input_num,deleted_station)
         puts "Станция удалена!" #может и не удалена, если первая/последняя
       end
     end
@@ -217,7 +217,7 @@ class Menu
     type_string = ["Пассажирский", "Товарный"]
     case type
     when 1,2
-      controller.create_train(number,type)
+      storage.create_train(number,type)
       puts "#{type_string[type - 1]} поезд #{number} создан!"
     else
       puts "Неверно задан тип поезда."
@@ -227,29 +227,29 @@ class Menu
   def add_car_to_train
     puts "Введите номер поезда, к которому следует прицепить вагон:"
     number = gets.chomp
-    unless controller.trains.key?(number)
+    unless storage.trains.key?(number)
       puts "Такого поезда нет."
       return
     end
     puts "Введите название вагона:"
     car_name = gets.chomp
-    controller.add_car_to_train(number,car_name)
+    storage.add_car_to_train(number,car_name)
     puts "Вагон прицеплен к поезду."
   end
 
   def remove_car_from_train
     puts "Введите номер поезда, от которого следует отцепить вагон:"
     number = gets.chomp
-    unless controller.trains.key?(number)
+    unless storage.trains.key?(number)
       puts "Такого поезда нет."
       return
     end
-    controller.remove_car_from_train(number)
+    storage.remove_car_from_train(number)
     puts "Вагон отцеплен."
   end
 
   def assign_route_to_train
-    if controller.trains.empty?
+    if storage.trains.empty?
       puts "Поезда пока не созданы."
       return
     end
@@ -258,23 +258,23 @@ class Menu
     input_num = (gets.to_i) - 1
     puts "Введите номер поезда, которому следует присвоить маршрут:"
     number = gets.chomp
-    controller.assign_route_to_train(number,input_num)
+    storage.assign_route_to_train(number,input_num)
   end
 
   def route_move_train_forward
     puts "Введите номер перемещаемого поезда:"
     number = gets.chomp
-    controller.route_move_train_forward(number)
+    storage.route_move_train_forward(number)
   end
 
   def route_move_train_back
     puts "Введите номер перемещаемого поезда:"
     number = gets.chomp
-    controller.route_move_train_back(number)
+    storage.route_move_train_back(number)
   end
 
   def route_list
-    controller.routes.each.with_index(1) do |route, i|
+    storage.routes.each.with_index(1) do |route, i|
       print "#{i}. #{route.stations.first.name} — #{route.stations.last.name}:"
       route.stations.each {|station| print " #{station.name}"}
       puts ""

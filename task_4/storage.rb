@@ -5,7 +5,7 @@ require_relative "cargo_train"
 require_relative "passenger_car"
 require_relative "passenger_train"
 
-class Controller
+class Storage
 
   attr_reader :stations, :trains, :routes, :cars
 
