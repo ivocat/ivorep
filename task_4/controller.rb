@@ -33,11 +33,9 @@ class Controller
   end
 
   def create_train(number,type)
-    if type == 1
-      @trains[number] = PassengerTrain.new(number)
-    else
-      @trains[number] = CargoTrain.new(number)
-    end
+    train_types = [PassengerTrain, CargoTrain]
+    train_klass = train_types.fetch(type - 1)
+    @trains[number] = train_klass.new(number)
   end
 
   def add_car_to_train(number,car_name)

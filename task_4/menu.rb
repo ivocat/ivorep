@@ -20,80 +20,13 @@ class Menu
 
       case input
       when 1
-        puts "\nУПРАВЛЕНИЕ СТАНЦИЯМИ:"
-        puts "1. Создать станцию"
-        puts "2. Просмотреть все станции"
-        puts "0. Вернуться назад"
-        print "> "
-        input_sub = gets.to_i
-        puts "\n"
-        case input_sub
-        when 1
-          create_station
-        when 2
-          stations_list
-        else #go back
-        end
+        entry_1
       when 2
-        puts "\nУПРАВЛЕНИЕ МАРШРУТАМИ:"
-        puts "1. Создать маршрут"
-        puts "2. Просмотреть все маршруты"
-        puts "3. Добавить станцию в маршрут"
-        puts "4. Удалить станцию из маршрута"
-        puts "0. Вернуться назад"
-        print "> "
-        #создать маршрут нельзя, если станций не хватает
-        #добавить станцию нельзя, если станций нет
-        #станцию нельзя удалить, если на ней поезд
-        input_sub = gets.to_i
-        puts "\n"
-        case input_sub
-        when 1
-          create_route
-        when 2
-          route_list
-        when 3
-          add_station_to_route
-        when 4
-          remove_station_from_route
-        else #go back
-        end
+        entry_2
       when 3
-        puts "\nКОНСТРУКТОР ПОЕЗДОВ:"
-        puts "1. Создать поезд"
-        puts "2. Добавить вагон в поезд"
-        puts "3. Отцепить вагон от поезда"
-        puts "0. Вернуться назад"
-        print "> "
-        input_sub = gets.to_i
-        puts "\n"
-        case input_sub
-        when 1
-          create_train
-        when 2
-          add_car_to_train
-        when 3
-          remove_car_from_train
-        else #go back
-        end
+        entry_3
       when 4
-        puts "\nУПРАВЛЕНИЕ ПОЕЗДАМИ:"
-        puts "1. Присвоить маршрут поезду"
-        puts "2. Переместить поезд вперёд по маршруту"
-        puts "3. Переместить поезд назад по маршруту"
-        puts "0. Вернуться назад"
-        print "> "
-        input_sub = gets.to_i
-        puts "\n"
-        case input_sub
-        when 1
-          assign_route_to_train
-        when 2
-          route_move_train_forward
-        when 3
-          route_move_train_back
-        else #go back
-        end
+        entry_4
       when 5
         exit
       else
@@ -103,6 +36,86 @@ class Menu
   end
 
   protected
+
+  def entry_1
+    puts "\nУПРАВЛЕНИЕ СТАНЦИЯМИ:"
+    puts "1. Создать станцию"
+    puts "2. Просмотреть все станции"
+    puts "0. Вернуться назад"
+    print "> "
+    input_sub = gets.to_i
+    puts "\n"
+    case input_sub
+    when 1
+      create_station
+    when 2
+      stations_list
+    else return
+    end
+  end
+  def entry_2
+    puts "\nУПРАВЛЕНИЕ МАРШРУТАМИ:"
+    puts "1. Создать маршрут"
+    puts "2. Просмотреть все маршруты"
+    puts "3. Добавить станцию в маршрут"
+    puts "4. Удалить станцию из маршрута"
+    puts "0. Вернуться назад"
+    print "> "
+    #создать маршрут нельзя, если станций не хватает
+    #добавить станцию нельзя, если станций нет
+    #станцию нельзя удалить, если на ней поезд
+    input_sub = gets.to_i
+    puts "\n"
+    case input_sub
+    when 1
+      create_route
+    when 2
+      route_list
+    when 3
+      add_station_to_route
+    when 4
+      remove_station_from_route
+    else return
+    end
+  end
+  def entry_3
+    puts "\nКОНСТРУКТОР ПОЕЗДОВ:"
+    puts "1. Создать поезд"
+    puts "2. Добавить вагон в поезд"
+    puts "3. Отцепить вагон от поезда"
+    puts "0. Вернуться назад"
+    print "> "
+    input_sub = gets.to_i
+    puts "\n"
+    case input_sub
+    when 1
+      create_train
+    when 2
+      add_car_to_train
+    when 3
+      remove_car_from_train
+    else return
+    end
+  end
+  def entry_4
+    puts "\nУПРАВЛЕНИЕ ПОЕЗДАМИ:"
+    puts "1. Присвоить маршрут поезду"
+    puts "2. Переместить поезд вперёд по маршруту"
+    puts "3. Переместить поезд назад по маршруту"
+    puts "0. Вернуться назад"
+    print "> "
+    input_sub = gets.to_i
+    puts "\n"
+    case input_sub
+    when 1
+      assign_route_to_train
+    when 2
+      route_move_train_forward
+    when 3
+      route_move_train_back
+    else return
+    end
+  end
 
   def stations_list
     if controller.stations.empty?
@@ -115,14 +128,10 @@ class Menu
           print ", поездов нет.\n"
         else
           print ", поезда: "
-          station.trains.each_with_index do |train, index|
-            if index < station.trains.size - 1
-              print "#{train.number}, "
-            else
-              print "#{train.number}."
-            end
+          station.trains[0..-2].each do |train|
+            print "#{train.number}, "
           end
-          puts ""
+          print "#{station.trains.last.number}.\n"
         end
       end
     end
@@ -189,13 +198,13 @@ class Menu
       route_choose_prompt
       print "> "
       input_num = (gets.to_i) - 1
-      if controller.routes[input_num].assigned == false
+      if controller.routes[input_num].assigned
+        puts "Маршрут уже назначен поезду, станции удалять нельзя."
+      else
         puts "Введите название удаляемой станции:"
         deleted_station = gets.chomp.capitalize
         controller.remove_station_from_route(input_num,deleted_station)
         puts "Станция удалена!" #может и не удалена, если первая/последняя
-      else
-        puts "Маршрут уже назначен поезду, станции удалять нельзя."
       end
     end
   end
@@ -265,8 +274,8 @@ class Menu
   end
 
   def route_list
-    controller.routes.each_with_index do |route, i|
-      print "#{i+1}. #{route.stations.first.name} — #{route.stations.last.name}:"
+    controller.routes.each.with_index(1) do |route, i|
+      print "#{i}. #{route.stations.first.name} — #{route.stations.last.name}:"
       route.stations.each {|station| print " #{station.name}"}
       puts ""
     end
