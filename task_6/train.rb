@@ -1,4 +1,7 @@
+require_relative "passenger_car"
+
 class Train
+  include Manufacturer
   attr_reader :cars, :number, :speed
 
   def initialize(number)
