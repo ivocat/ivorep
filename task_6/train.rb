@@ -3,12 +3,22 @@ require_relative "passenger_car"
 class Train
   include Manufacturer
   attr_reader :cars, :number, :speed
+  
+  @@trains = []
 
   def initialize(number)
     @number = number.to_s
     @cars = []
     @speed = 0
+    @@trains << self
   end
+  
+  def self.find(name)
+    @@trains.each do |train|
+      return train if train.number == name.to_s
+    end
+  end
+    
 
   def speed_delta(speed_value)
     @speed += speed_value
