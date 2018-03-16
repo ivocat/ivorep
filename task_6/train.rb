@@ -1,7 +1,9 @@
 require_relative "passenger_car"
+require_relative "instance_counter"
 
 class Train
   include Manufacturer
+  include InstanceCounter
   attr_reader :cars, :number, :speed
   
   @@trains = []
