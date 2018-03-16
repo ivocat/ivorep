@@ -1,5 +1,8 @@
+require_relative "instance_counter"
+
 class Station
   attr_reader :trains, :name
+  include InstanceCounter
   @@stations = []
 
   def self.all
