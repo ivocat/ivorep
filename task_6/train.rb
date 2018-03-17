@@ -15,7 +15,7 @@ class Train
     @@trains << self
   end
   
-  def self.find(name)
+  def self.find(number)
     @@trains.each do |train|
       return train if train.number == name.to_s
     end
