@@ -1,9 +1,18 @@
+require_relative "instance_counter"
+
 class Station
   attr_reader :trains, :name
+  include InstanceCounter
+  @@stations = []
 
+  def self.all
+    @@stations
+  end
+  
   def initialize(name)
     @name = name
     @trains = []
+    @@stations << self
   end
 
   def accommodate(train)
