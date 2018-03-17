@@ -264,12 +264,20 @@ class Menu
   def route_move_train_forward
     puts "Введите номер перемещаемого поезда:"
     number = gets.chomp
+    unless storage.trains.key?(number)
+      puts "Такого поезда нет."
+      return
+    end
     storage.route_move_train_forward(number)
   end
 
   def route_move_train_back
     puts "Введите номер перемещаемого поезда:"
     number = gets.chomp
+    unless storage.trains.key?(number)
+      puts "Такого поезда нет."
+      return
+    end
     storage.route_move_train_back(number)
   end
 
