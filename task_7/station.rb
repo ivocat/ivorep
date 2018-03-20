@@ -8,9 +8,10 @@ class Station
   def self.all
     @@stations
   end
-  
+
   def initialize(name)
     @name = name
+    raise "вы не ввели имя станции" if name.empty?
     @trains = []
     @@stations << self
   end
