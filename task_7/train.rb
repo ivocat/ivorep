@@ -91,7 +91,7 @@ class Train
   end
 
   def validate!
-    raise "Номер поезда не указан" if @number.empty?
-    raise "Номер поезда указан в неверном формате" if @number !~ NUMBER_FORMAT
+    raise "номер поезда не указан" if @number.empty?
+    raise "номер поезда указан в неверном формате" if @number !~ NUMBER_FORMAT
   end
 end

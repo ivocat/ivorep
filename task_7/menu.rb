@@ -223,7 +223,7 @@ class Menu
       storage.create_train(number,type)
       puts "#{type_string[type - 1]} поезд #{number} создан!"
     else
-      raise "Неверно задан тип поезда"
+      raise "неверно задан тип поезда"
     end
   rescue RuntimeError => err
     puts "Ошибка: #{err.message}. Попробуйте снова:\n"
