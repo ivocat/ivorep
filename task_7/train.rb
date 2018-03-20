@@ -13,7 +13,7 @@ class Train
   NUMBER_FORMAT = /^[А-Я\d]{3}-?[А-Я\d]{2}$/i
 
   def initialize(number)
-    @number = number.to_s
+    @number = number.to_s.upcase
     validate!
     @cars = []
     @speed = 0
@@ -21,7 +21,7 @@ class Train
   end
 
   def self.find(number)
-    @@trains[number.to_s]
+    @@trains[number.to_s.upcase]
   end
 
   def speed_delta(speed_value)
