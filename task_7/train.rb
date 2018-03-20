@@ -1,24 +1,28 @@
 require_relative "passenger_car"
 require_relative "instance_counter"
+require_relative "validator"
 
 class Train
   include Manufacturer
   include InstanceCounter
+  include Validator
   attr_reader :cars, :number, :speed
-  
+
   @@trains = {}
+
+  NUMBER_FORMAT = /^[А-Я\d]{3}-?[А-Я\d]{2}$/i
 
   def initialize(number)
     @number = number.to_s
+    validate!
     @cars = []
     @speed = 0
     @@trains[number] = self
   end
-  
+
   def self.find(number)
     @@trains[number.to_s]
   end
-    
 
   def speed_delta(speed_value)
     @speed += speed_value
@@ -84,5 +88,10 @@ class Train
 
   def valid_car?(new_car)
     raise NotImplementedError, 'Описать в дочерних классах'
+  end
+
+  def validate!
+    raise "Номер поезда не указан" if @number.empty?
+    raise "Номер поезда указан в неверном формате" if @number !~ NUMBER_FORMAT
   end
 end
