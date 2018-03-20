@@ -220,8 +220,11 @@ class Menu
       storage.create_train(number,type)
       puts "#{type_string[type - 1]} поезд #{number} создан!"
     else
-      puts "Неверно задан тип поезда."
+      raise "Неверно задан тип поезда."
     end
+  rescue RuntimeError => err
+    puts "Ошибка: #{err.message}. Попробуйте снова:"
+    retry
   end
 
   def add_car_to_train
