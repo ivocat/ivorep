@@ -210,9 +210,9 @@ class Menu
   end
 
   def create_train
-    puts "Введите номер поезда в формате XXX-XX или XXXXX:"
+    puts "Введите номер поезда в формате XXX-XX или XXXXX (допустимы кириллица и цифры):\n> "
     number = gets.chomp
-    puts "Тип поезда:\n1. Пассажирский\n2. Товарный"
+    puts "Тип поезда:\n1. Пассажирский\n2. Товарный\n> "
     type = gets.to_i
     type_string = ["Пассажирский", "Товарный"]
     case type
@@ -220,7 +220,7 @@ class Menu
       storage.create_train(number,type)
       puts "#{type_string[type - 1]} поезд #{number} создан!"
     else
-      raise "Неверно задан тип поезда."
+      raise "Неверно задан тип поезда"
     end
   rescue RuntimeError => err
     puts "Ошибка: #{err.message}. Попробуйте снова:"
