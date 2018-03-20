@@ -210,7 +210,7 @@ class Menu
   end
 
   def create_train
-    puts "Введите номер поезда:"
+    puts "Введите номер поезда в формате XXX-XX или XXXXX:"
     number = gets.chomp
     puts "Тип поезда:\n1. Пассажирский\n2. Товарный"
     type = gets.to_i
