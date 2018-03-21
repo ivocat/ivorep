@@ -29,6 +29,8 @@ class Storage
   end
 
   def remove_station_from_route(input_num,deleted_station)
+    raise "Нельзя удалить станцию отправления!" if deleted_station == @routes[input_num].stations.first.name
+    raise "Нельзя удалить конечную станцию!" if deleted_station == @routes[input_num].stations.last.name
     @routes[input_num].remove_train_stop(@stations[deleted_station])
   end
 
@@ -38,17 +40,19 @@ class Storage
     @trains[number] = train_klass.new(number)
   end
 
-  def add_car_to_train(number,car_name)
-    if @trains[number].is_a?(PassengerTrain)
-      @cars[car_name] = PassengerCar.new(car_name)
-    else
-      @cars[car_name] = CargoCar.new(car_name)
+  def add_car_to_train(number,car_name,cars_to_hook)
+    cars_to_hook.times do
+      if @trains[number].is_a?(PassengerTrain)
+        @cars[car_name] = PassengerCar.new(car_name)
+      else
+        @cars[car_name] = CargoCar.new(car_name)
+      end
+      @trains[number].car_add(@cars[car_name])
     end
-    @trains[number].car_add(@cars[car_name])
   end
 
-  def remove_car_from_train(number)
-    @trains[number].car_remove
+  def remove_car_from_train(number,cars_to_remove)
+    cars_to_remove.times do @trains[number].car_remove end
   end
 
   def assign_route_to_train(number,input_num)
