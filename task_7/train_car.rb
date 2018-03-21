@@ -4,6 +4,6 @@ class TrainCar
   include Manufacturer
 
   def initialize(model)
-    set_manufacturer(model)
+    self.manufacturer = model
   end
 end
