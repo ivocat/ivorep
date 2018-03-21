@@ -219,9 +219,9 @@ class Menu
   end
 
   def create_train
-    puts "Введите номер поезда в формате XXX-XX или XXXXX (допустимы кириллица и цифры):\n> "
+    print "\nВведите номер поезда в формате XXX-XX или XXXXX (допустимы кириллица и цифры):\n> "
     number = gets.chomp
-    puts "Тип поезда:\n1. Пассажирский\n2. Товарный\n> "
+    print "\nТип поезда:\n1. Пассажирский\n2. Товарный\n> "
     type = gets.to_i
     type_string = ["Пассажирский", "Товарный"]
     case type
