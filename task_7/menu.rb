@@ -96,7 +96,7 @@ class Menu
     when 3
       remove_car_from_train
     when 4
-      trains_list
+      see_trains
     else return
     end
   end
@@ -118,7 +118,7 @@ class Menu
     when 3
       route_move_train_back
     when 4
-      trains_list
+      see_trains
     else return
     end
   end
@@ -245,8 +245,15 @@ class Menu
     end
     puts "Введите название вагона:"
     car_name = gets.chomp
-    storage.add_car_to_train(number,car_name)
-    puts "Вагон прицеплен к поезду."
+    puts "Сколько таких вагонов следует прицепить?"
+    cars_to_hook = gets.chomp.to_i
+    raise "введено некорректное количествов вагонов" if cars_to_hook < 1
+    storage.add_car_to_train(number,car_name,cars_to_hook)
+    puts "Вагон прицеплен к поезду." if cars_to_hook == 1
+    puts "Вагоны прицеплены к поезду." if cars_to_hook > 1
+  rescue RuntimeError => err
+    puts "Ошибка: #{err.message}. Попробуйте снова:\n"
+    retry
   end
 
   def remove_car_from_train
@@ -258,6 +265,14 @@ class Menu
     end
     storage.remove_car_from_train(number)
     puts "Вагон отцеплен."
+  end
+
+  def see_trains
+    if storage.trains.empty?
+      puts "Поездов пока нет.\n"
+    else
+      trains_list
+    end
   end
 
   def assign_route_to_train
@@ -302,16 +317,12 @@ class Menu
   end
 
   def trains_list
-    if storage.trains.empty?
-      puts "Поездов пока нет.\n"
-    else
-      storage.trains.each_with_index do |(number, train), index|
-        puts ""
-        print "#{index}. number" + "," + " " * (10 - number.length)
-        print train.class + "," " " * (15 - train.class.length)
-        print "вагонов нет" if train.cars.empty?
-        print "#{train.cars.length} вагонов." if train.cars.any?
-      end
+    storage.trains.each_with_index do |(number, train), index|
+      print "#{index + 1}. #{number}" , "," , " " * (7 - number.length)
+      print train.class.normal_name , " —" , " " * (15 - train.class.to_s.length)
+      print "вагонов нет." if train.cars.empty?
+      print "вагонов: #{train.cars.length}." if train.cars.any?
+      puts ""
     end
   end
 
