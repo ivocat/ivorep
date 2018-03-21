@@ -11,7 +11,7 @@ class Station
 
   def initialize(name)
     @name = name
-    raise "вы не ввели имя станции" if name.empty?
+    validate!
     @trains = []
     @@stations << self
     register_instance
@@ -27,5 +27,11 @@ class Station
 
   def trains_by_type(desired_type)
     @trains.select {|train| train.type == desired_type}
+  end
+
+  protected
+
+  def validate!
+    raise "вы не ввели имя станции" if name.empty?
   end
 end
