@@ -29,6 +29,8 @@ class Storage
   end
 
   def remove_station_from_route(input_num,deleted_station)
+    raise "Нельзя удалить станцию отправления!" if deleted_station == @routes[input_num].stations.first.name
+    raise "Нельзя удалить конечную станцию!" if deleted_station == @routes[input_num].stations.last.name
     @routes[input_num].remove_train_stop(@stations[deleted_station])
   end
 
