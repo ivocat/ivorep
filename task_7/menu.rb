@@ -237,12 +237,12 @@ class Menu
   end
 
   def add_car_to_train
-    puts "Введите номер поезда, к которому следует прицепить вагон:"
-    number = gets.chomp
-    unless storage.trains.key?(number)
-      puts "Такого поезда нет."
+    if storage.trains.empty?
+      puts "Поезда пока не созданы."
       return
     end
+    puts "Добавление вагона к поезду.\n"
+    number = train_choose_prompt
     puts "Введите название вагона:"
     car_name = gets.chomp
     puts "Сколько таких вагонов следует прицепить?"
@@ -257,14 +257,22 @@ class Menu
   end
 
   def remove_car_from_train
-    puts "Введите номер поезда, от которого следует отцепить вагон:"
-    number = gets.chomp
-    unless storage.trains.key?(number)
-      puts "Такого поезда нет."
+    if storage.trains.empty?
+      puts "Поезда пока не созданы."
       return
     end
-    storage.remove_car_from_train(number)
-    puts "Вагон отцеплен."
+    puts "Отцепка вагонов от поезда.\n"
+    number = train_choose_prompt
+    puts "Сколько вагонов необходимо отцепить?"
+    print "> "
+    cars_to_remove = gets.chomp.to_i
+    raise "введено некорректное количествов вагонов" if cars_to_remove < 1
+    storage.remove_car_from_train(number,cars_to_remove)
+    puts "Вагон отцеплен." if cars_to_remove == 1
+    puts "Вагоны отцеплены." if cars_to_remove > 1
+  rescue RuntimeError => err
+    puts "Ошибка: #{err.message}. Попробуйте снова:\n"
+    retry
   end
 
   def see_trains
@@ -316,12 +324,18 @@ class Menu
     end
   end
 
+  def train_choose_prompt
+    puts "Выберите номер поезда из списка:\n\n"
+    trains_list
+    train_choose_input
+  end
+
   def trains_list
     storage.trains.each_with_index do |(number, train), index|
-      print "#{index + 1}. #{number}" , "," , " " * (7 - number.length)
-      print train.class.normal_name , " —" , " " * (15 - train.class.to_s.length)
-      print "вагонов нет." if train.cars.empty?
-      print "вагонов: #{train.cars.length}." if train.cars.any?
+      print "#{index + 1}. #{number}" , " " * (7 - number.length) , "— "
+      print train.class.normal_name , "." , " " * (15 - train.class.to_s.length)
+      print "Вагонов нет." if train.cars.empty?
+      print "Вагонов: #{train.cars.length}." if train.cars.any?
       puts ""
     end
   end
@@ -331,4 +345,16 @@ class Menu
     route_list
   end
 
+  protected
+
+  def train_choose_input
+    print "> "
+    number = gets.chomp.to_i
+    raise "некорректный номер" if number < 1 || number > storage.trains.size
+    number -= 1
+    storage.trains.keys[number]
+  rescue RuntimeError => err
+    puts "Ошибка: #{err.message}. Попробуйте снова:\n"
+    retry
+  end
 end

@@ -49,8 +49,8 @@ class Storage
     end
   end
 
-  def remove_car_from_train(number)
-    @trains[number].car_remove
+  def remove_car_from_train(number,cars_to_remove)
+    cars_to_remove.times do @trains[number].car_remove end
   end
 
   def assign_route_to_train(number,input_num)
