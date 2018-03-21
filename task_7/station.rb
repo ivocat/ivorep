@@ -14,6 +14,7 @@ class Station
     raise "вы не ввели имя станции" if name.empty?
     @trains = []
     @@stations << self
+    register_instance
   end
 
   def accommodate(train)
