@@ -83,6 +83,7 @@ class Menu
     puts "1. Создать поезд"
     puts "2. Добавить вагон в поезд"
     puts "3. Отцепить вагон от поезда"
+    puts "4. Просмотреть существующие поезда"
     puts "0. Вернуться назад"
     print "> "
     input_sub = gets.to_i
@@ -94,6 +95,8 @@ class Menu
       add_car_to_train
     when 3
       remove_car_from_train
+    when 4
+      trains_list
     else return
     end
   end
@@ -102,6 +105,7 @@ class Menu
     puts "1. Присвоить маршрут поезду"
     puts "2. Переместить поезд вперёд по маршруту"
     puts "3. Переместить поезд назад по маршруту"
+    puts "4. Просмотреть существующие поезда"
     puts "0. Вернуться назад"
     print "> "
     input_sub = gets.to_i
@@ -113,6 +117,8 @@ class Menu
       route_move_train_forward
     when 3
       route_move_train_back
+    when 4
+      trains_list
     else return
     end
   end
@@ -153,23 +159,23 @@ class Menu
 
   def create_route
     if storage.stations_not_enough?
-      puts "Недостаточно станций для создания маршрута."
-      return
+      raise "недостаточно станций для создания маршрута"
     end
     puts "Введите начальную станцию маршрута:"
     first_station = gets.chomp.capitalize
     unless storage.station_exists?(first_station)
-      puts "Такой станции нет!"
-      return
+      raise "такой станции нет"
     end
     puts "Введите конечную станцию маршрута:"
     last_station = gets.chomp.capitalize
     unless storage.station_exists?(last_station)
-      puts "Такой станции нет!"
-      return
+      raise "такой станции нет"
     end
     storage.create_route(first_station, last_station)
     puts "Маршрут #{first_station} — #{last_station} создан."
+  rescue RuntimeError => err
+    puts "Ошибка: #{err.message}. Попробуйте снова:\n"
+    retry
   end
 
   def add_station_to_route
@@ -292,6 +298,20 @@ class Menu
       print "#{i}. #{route.stations.first.name} — #{route.stations.last.name}:"
       route.stations.each {|station| print " #{station.name}"}
       puts ""
+    end
+  end
+
+  def trains_list
+    if storage.trains.empty?
+      puts "Поездов пока нет.\n"
+    else
+      storage.trains.each_with_index do |(number, train), index|
+        puts ""
+        print "#{index}. number" + "," + " " * (10 - number.length)
+        print train.class + "," " " * (15 - train.class.length)
+        print "вагонов нет" if train.cars.empty?
+        print "#{train.cars.length} вагонов." if train.cars.any?
+      end
     end
   end
 

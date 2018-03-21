@@ -1,9 +1,11 @@
 require_relative "instance_counter"
+require_relative "validator"
 
 class Route
   attr_reader :stations
   attr_accessor :assigned
   include InstanceCounter
+  include Validator
 
   def initialize(departure_station, terminal_station)
     @stations = [departure_station, terminal_station]
