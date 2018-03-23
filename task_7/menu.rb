@@ -329,8 +329,8 @@ class Menu
 
   def trains_list
     storage.trains.each.with_index(1) do |(number, train), index|
-      print "#{index}. #{number}" , " " * (7 - number.length) , "— "
-      print train.class.normal_name , "." , " " * (15 - train.class.to_s.length)
+      print "#{index}. #{number}".ljust(10) , "— "
+      print "#{train.class.normal_name}.".ljust(14)
       print "Вагонов нет." if train.cars.empty?
       print "Вагонов: #{train.cars.length}." if train.cars.any?
       puts ""
