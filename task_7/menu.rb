@@ -2,7 +2,6 @@ require_relative "storage"
 require_relative "exceptions"
 
 class Menu
-  include Exceptions
   attr_reader :storage
 
   def initialize (storage)
@@ -158,14 +157,11 @@ class Menu
     print "Введите название новой станции: "
     name = gets.chomp.capitalize
     if storage.station_exists?(name)
-      raise "Станция с таким названием уже есть. Попробуйте \"#{name}-2\""
+      puts "Станция с таким названием уже есть. Попробуйте \"#{name}-2\"."
     else
       storage.create_station(name)
       puts "Станция #{storage.stations[name].name} создана!"
     end
-  rescue RuntimeError => err
-    puts "Ошибка: #{err.message}. Попробуйте снова:\n"
-    retry
   end
 
   def create_route
@@ -332,9 +328,9 @@ class Menu
   end
 
   def trains_list
-    storage.trains.each_with_index do |(number, train), index|
-      print "#{index + 1}. #{number}" , " " * (7 - number.length) , "— "
-      print train.class.normal_name , "." , " " * (15 - train.class.to_s.length)
+    storage.trains.each.with_index(1) do |(number, train), index|
+      print "#{index}. #{number}".ljust(10) , "— "
+      print "#{train.class.normal_name}.".ljust(14)
       print "Вагонов нет." if train.cars.empty?
       print "Вагонов: #{train.cars.length}." if train.cars.any?
       puts ""
