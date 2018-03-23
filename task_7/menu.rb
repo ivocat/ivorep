@@ -2,7 +2,6 @@ require_relative "storage"
 require_relative "exceptions"
 
 class Menu
-  include Exceptions
   attr_reader :storage
 
   def initialize (storage)
