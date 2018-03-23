@@ -157,14 +157,11 @@ class Menu
     print "Введите название новой станции: "
     name = gets.chomp.capitalize
     if storage.station_exists?(name)
-      raise "Станция с таким названием уже есть. Попробуйте \"#{name}-2\""
+      puts "Станция с таким названием уже есть. Попробуйте \"#{name}-2\"."
     else
       storage.create_station(name)
       puts "Станция #{storage.stations[name].name} создана!"
     end
-  rescue RuntimeError => err
-    puts "Ошибка: #{err.message}. Попробуйте снова:\n"
-    retry
   end
 
   def create_route
