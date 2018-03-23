@@ -3,7 +3,7 @@ require_relative "cargo_car"
 
 class CargoTrain < Train
 
-  def self.normal_name
+  def self.to_s
     "товарный"
   end
 
