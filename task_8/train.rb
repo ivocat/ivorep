@@ -42,6 +42,10 @@ class Train
     @cars.pop if @speed == 0
   end
 
+  def iterate_cars(block)
+    @@cars.each &block
+  end
+
   def route(route_object)
     @route = route_object
     route_object.assigned = true
