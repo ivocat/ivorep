@@ -14,7 +14,7 @@ class PassengerCar < TrainCar
     @seats_taken += 1
   end
 
-  def seats_free
+  def seats_remaining
     @seats_total - @seats_taken
   end
 end
