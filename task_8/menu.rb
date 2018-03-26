@@ -352,12 +352,19 @@ class Menu
   end
 
   def create_dummy_package
-    %w(Москва Крюково Тверь Волочёк Бологое Угловка Санкт-Петербург).each {|name| storage.create_station(name)}
-    storage.create_route(storage.stations["Москва"],storage.stations["Санкт-Петербург"])
+    station_set = %w(Москва Крюково Тверь Волочёк Бологое Угловка Санкт-Петербург)
+    station_set.each {|name| storage.create_station(name)}
+    storage.create_route("Москва","Санкт-Петербург")
     for i in 1..5 do
-      storage.add_station_to_route(0,storage.stations[1],storage.stations[0])
+      storage.add_station_to_route(0,storage.stations.keys[i],storage.stations.keys[i - 1])
     end
+    storage.create_route("Санкт-Петербург","Москва")
+    storage.add_station_to_route(1,"Бологое","Санкт-Петербург")
     storage.create_train("111-11",1)
-
+    storage.create_train("222-22",2)
+    storage.add_car_to_train("111-11","ПВ-1",10)
+    storage.add_car_to_train("222-22","ГВ-1",20)
+    storage.assign_route_to_train("111-11",0)
+    storage.assign_route_to_train("222-22",1)
   end
 end
