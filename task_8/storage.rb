@@ -40,12 +40,12 @@ class Storage
     @trains[number] = train_klass.new(number)
   end
 
-  def add_car_to_train(number,car_name,cars_to_hook)
+  def add_car_to_train(number,car_name,cars_to_hook,car_capacity = 100)
     cars_to_hook.times do
       if @trains[number].is_a?(PassengerTrain)
-        @cars[car_name] = PassengerCar.new(car_name)
+        @cars[car_name] = PassengerCar.new(car_name,car_capacity)
       else
-        @cars[car_name] = CargoCar.new(car_name)
+        @cars[car_name] = CargoCar.new(car_name,car_capacity)
       end
       @trains[number].car_add(@cars[car_name])
     end
