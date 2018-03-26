@@ -6,6 +6,7 @@ class Menu
 
   def initialize (storage)
     @storage = storage
+    create_dummy_package
   end
 
   def execute
@@ -348,5 +349,15 @@ class Menu
   rescue RuntimeError => err
     puts "Ошибка: #{err.message}. Попробуйте снова:\n"
     retry
+  end
+
+  def create_dummy_package
+    %w(Москва Крюково Тверь Волочёк Бологое Угловка Санкт-Петербург).each {|name| storage.create_station(name)}
+    storage.create_route(storage.stations["Москва"],storage.stations["Санкт-Петербург"])
+    for i in 1..5 do
+      storage.add_station_to_route(0,storage.stations[1],storage.stations[0])
+    end
+    storage.create_train("111-11",1)
+
   end
 end
