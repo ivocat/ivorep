@@ -1,8 +1,10 @@
 require_relative "storage"
 require_relative "exceptions"
+require_relative "sweep_methods"
 
 class Menu
   attr_reader :storage
+  include SweepMethods
 
   def initialize (storage)
     @storage = storage
