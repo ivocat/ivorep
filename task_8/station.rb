@@ -30,7 +30,7 @@ class Station
   end
 
   def iterate_trains(block)
-    @@stations.trains.each &block
+    @trains.each &block
   end
 
   protected
