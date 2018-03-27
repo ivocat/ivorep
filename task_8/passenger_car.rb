@@ -1,17 +1,18 @@
 require_relative "train_car"
 
 class PassengerCar < TrainCar
-  attr_reader :seats_total, :seats_taken
+  attr_reader :seats_total, :seats_taken, :car_name
   @seats_total = 0
-  @seats_taken = 0
 
-  def initialize(model, seats_total)
-    self.manufacturer = model
+  def initialize(car_name, seats_total, manufacturer = "РЖД")
+    @car_name = car_name
+    self.manufacturer = manufacturer
     @seats_total = seats_total
+    @seats_taken = 0
   end
 
   def occupy_seat
-    @seats_taken += 1
+    @seats_taken += 1 if @seats_taken < @seats_total
   end
 
   def seats_remaining

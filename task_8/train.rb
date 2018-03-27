@@ -35,10 +35,12 @@ class Train
   end
 
   def car_add(new_car)
+    new_car.index_number = @cars.length + 1
     @cars << new_car if valid_car?(new_car)
   end
 
   def car_remove
+    @cars.last.index_number = 0
     @cars.pop if @speed == 0
   end
 
