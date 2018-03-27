@@ -29,6 +29,10 @@ class Station
     @trains.select {|train| train.type == desired_type}
   end
 
+  def iterate_trains(block)
+    @trains.each &block
+  end
+
   protected
 
   def validate!
