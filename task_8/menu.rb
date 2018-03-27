@@ -337,6 +337,14 @@ class Menu
       puts ""
     end
   end
+  
+  def exhaustive_list
+    storage.stations.each_value do |station|
+      puts station.name
+      station.iterate_trains(block_trains)
+      puts ""
+    end
+  end
 
   protected
 
