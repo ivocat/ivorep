@@ -43,7 +43,7 @@ class Train
   end
 
   def iterate_cars(block)
-    @@cars.each &block
+    @cars.each &block
   end
 
   def route(route_object)
