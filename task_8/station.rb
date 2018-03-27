@@ -29,8 +29,8 @@ class Station
     @trains.select {|train| train.type == desired_type}
   end
 
-  def iterate(block)
-    @@stations.each &block
+  def iterate_trains(block)
+    @@stations.trains.each &block
   end
 
   protected
