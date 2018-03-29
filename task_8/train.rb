@@ -44,8 +44,10 @@ class Train
     @cars.pop if @speed == 0
   end
 
-  def iterate_cars(block)
-    @cars.each &block
+  def each_car
+    @cars.each do |car|
+      yield car
+    end
   end
 
   def route(route_object)

@@ -29,8 +29,10 @@ class Station
     @trains.select {|train| train.type == desired_type}
   end
 
-  def iterate_trains(block)
-    @trains.each &block
+  def each_train
+    @trains.each do |train|
+      yield train
+    end
   end
 
   protected

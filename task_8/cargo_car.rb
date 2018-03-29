@@ -6,16 +6,19 @@ class CargoCar < TrainCar
   def initialize(car_name, capacity, manufacturer = "РЖД")
     @car_name = car_name
     self.manufacturer = manufacturer
-    @capacity = capacity.to_f
+    @capacity = capacity
     @capacity_taken = 0.0
   end
 
   def occupy_space(volume)
-    @capacity_taken += volume
-    @capacity_taken = @capacity if @capacity_taken > @capacity
+    @capacity_taken = [@capacity_taken + volume, @capacity].min
   end
 
   def capacity_remaining
     @capacity - @capacity_taken
+  end
+
+  def to_s
+    "товарный"
   end
 end
