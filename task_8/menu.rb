@@ -148,11 +148,6 @@ class Menu
 
   def stations_list
     raise Exceptions::NoObjects, "Список станций пуст." if storage.stations.empty?
-
-    block_trains_short = lambda do |train|
-      print "  Поезд " , train.number , ", " , train.class.to_s , ". Вагонов: " , train.cars.length , "\n"
-    end
-
     puts "Список станций:"
     storage.stations.each_value do |station|
       print "#{station.name}"
@@ -160,12 +155,9 @@ class Menu
         print ", поездов нет.\n"
       else
         print "\n"
-        station.iterate_trains(block_trains_short)
-        # print ", поезда: "
-        # station.trains[0..-2].each do |train|
-        #   print "#{train.number}, "
-        # end
-        # print "#{station.trains.last.number}.\n"
+        station.each_train do |train|
+          print "  Поезд " , train.number , ", " , train.class.to_s , ". Вагонов: " , train.cars.length , "\n"
+        end
       end
     end
   end
@@ -240,14 +232,14 @@ class Menu
 
   def create_train
     print "\nВведите номер поезда в формате XXX-XX или XXXXX (допустимы кириллица и цифры):\n> "
-    number = gets.chomp
+    train_number = gets.chomp
     print "\nТип поезда:\n1. Пассажирский\n2. Товарный\n> "
     type = gets.to_i
     type_string = ["Пассажирский", "Товарный"]
     case type
     when 1,2
-      storage.create_train(number,type)
-      puts "#{type_string[type - 1]} поезд #{number} создан!"
+      storage.create_train(train_number,type)
+      puts "#{type_string[type - 1]} поезд #{train_number} создан!"
     else
       raise "неверно задан тип поезда"
     end
@@ -265,9 +257,12 @@ class Menu
     puts "Сколько таких вагонов следует прицепить?"
     cars_to_hook = gets.chomp.to_i
     raise "введено некорректное количествов вагонов" if cars_to_hook < 1
-    puts "Введите количество мест в вагоне (или будет принято 100 по умолчанию)" if storage.trains[train_number].is_a? PassengerTrain
-    puts "Введите вместимость вагона (или будет принято 100 по умолчанию)" if storage.trains[train_number].is_a? CargoTrain
-    car_capacity = gets.to_i
+    if storage.trains[train_number].is_a? PassengerTrain
+      puts "Введите количество мест в вагоне (или будет принято 100 по умолчанию)"
+      car_capacity = gets.to_i
+    else puts "Введите вместимость вагона (или будет принято 100 по умолчанию)"
+      car_capacity = gets.to_f
+    end
     car_capacity = 100 if car_capacity == 0
     storage.add_car_to_train(train_number,car_name,cars_to_hook,car_capacity)
     puts "Вагон прицеплен к поезду." if cars_to_hook == 1
@@ -280,12 +275,12 @@ class Menu
   def remove_car_from_train
     raise Exceptions::NoObjects, "Поезда пока не созданы." if storage.trains.empty?
     puts "Отцепка вагонов от поезда.\n"
-    number = train_choose_prompt
+    train_number = train_choose_prompt
     puts "Сколько вагонов необходимо отцепить?"
     print "> "
     cars_to_remove = gets.chomp.to_i
     raise "введено некорректное количествов вагонов" if cars_to_remove < 1
-    storage.remove_car_from_train(number,cars_to_remove)
+    storage.remove_car_from_train(train_number,cars_to_remove)
     puts "Вагон отцеплен." if cars_to_remove == 1
     puts "Вагоны отцеплены." if cars_to_remove > 1
   rescue RuntimeError => err
@@ -301,11 +296,11 @@ class Menu
   def see_train_cars
     raise Exceptions::NoObjects, "Поезда пока не созданы." if storage.trains.empty?
     puts "Просмотр всех вагонов поезда.\n"
-    number = train_choose_prompt
-    if storage.trains[number].cars.empty?
+    train_number = train_choose_prompt
+    if storage.trains[train_number].cars.empty?
       puts "В поезде пока нет вагонов"
     else
-      list_all_train_cars(number)
+      list_all_train_cars(train_number)
     end
     puts ""
   end
@@ -313,24 +308,22 @@ class Menu
   def occupy_train_car
     raise Exceptions::NoObjects, "Поезда пока не созданы." if storage.trains.empty?
     puts "Загрузка вагона поезда.\n"
-    number = train_choose_prompt
-    if storage.trains[number].cars.empty?
+    train_number = train_choose_prompt
+    if storage.trains[train_number].cars.empty?
       puts "В поезде пока нет вагонов"
     else
       puts "Выберите номер вагона из списка"
-      list_all_train_cars(number)
+      list_all_train_cars(train_number)
       print "\n> "
       car_number = gets.to_i - 1
-      raise "выбран неверный номер вагона" unless car_number.between?(1,storage.trains[number].cars.length)
-      if storage.trains[number].is_a? PassengerTrain
+      raise "выбран неверный номер вагона" unless car_number.between?(1,storage.trains[train_number].cars.length)
+      if storage.trains[train_number].is_a? PassengerTrain
         print "\nСколько пассажиров посадить в вагон?\n> "
-        occupation = gets.to_i
-        occupation.times { storage.trains[number].cars[car_number].occupy_seat }
       else
         print "\nСколько объёма следует занять в вагоне?\n> "
-        occupation = gets.to_f
-        storage.trains[number].cars[car_number].occupy_space(occupation)
       end
+      occupation = gets.chomp
+      storage.occupy_car(train_number,car_number,occupation)
     end
   rescue RuntimeError => err
     puts "Ошибка: #{err.message}. Попробуйте снова:\n"
@@ -343,8 +336,8 @@ class Menu
     print "> "
     input_num = (gets.to_i) - 1
     puts "\nПрисвоение маршрута поезду."
-    number = train_choose_prompt
-    storage.assign_route_to_train(number,input_num)
+    train_number = train_choose_prompt
+    storage.assign_route_to_train(train_number,input_num)
     puts "Маршрут присвоен поезду.\n"
   end
 
@@ -352,8 +345,8 @@ class Menu
     raise Exceptions::NoObjects, "Поезда пока не созданы." if storage.trains.empty?
     raise Exceptions::NoObjects, "Поездов на маршруте сейчас нет." unless storage.routes.any? {|route| route.assigned}
     puts "\nПеремещение поезда по маршруту."
-    number = train_choose_prompt
-    storage.route_move_train_forward(number)
+    train_number = train_choose_prompt
+    storage.route_move_train_forward(train_number)
     puts "Поезд перемещён вперёд по маршруту.\n"
   end
 
@@ -361,8 +354,8 @@ class Menu
     raise Exceptions::NoObjects, "Поезда пока не созданы." if storage.trains.empty?
     raise Exceptions::NoObjects, "Поездов на маршруте сейчас нет." unless storage.routes.any? {|route| route.assigned}
     puts "\nПеремещение поезда по маршруту."
-    number = train_choose_prompt
-    storage.route_move_train_back(number)
+    train_number = train_choose_prompt
+    storage.route_move_train_back(train_number)
     puts "Поезд перемещён назад по маршруту.\n"
   end
 
@@ -388,8 +381,8 @@ class Menu
   end
 
   def trains_list
-    storage.trains.each.with_index(1) do |(number, train), index|
-      print "#{index}. #{number}".ljust(10) , "— "
+    storage.trains.each.with_index(1) do |(train_number, train), index|
+      print "#{index}. #{train_number}".ljust(10) , "— "
       print "#{train.class.to_s}.".ljust(14)
       print "Вагонов нет." if train.cars.empty?
       print "Вагонов: #{train.cars.length}." if train.cars.any?
@@ -399,23 +392,19 @@ class Menu
 
   def exhaustive_list
     puts ""
-    block_cars = lambda do |car|
-      print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, "
-      if car.is_a? PassengerCar
-        print "пассажирский. Мест: #{car.seats_total}, мест занято: #{car.seats_taken}\n"
-      else
-        print "товарный. Объём: #{car.capacity}, занято: #{car.capacity_taken}\n"
-      end
-    end
-
-    block_trains = lambda do |train|
-      print "  Поезд " , train.number , ", " , train.class.to_s , ". Вагонов: " , train.cars.length , "\n"
-      train.iterate_cars(block_cars)
-    end
-
     storage.stations.each_value do |station|
       puts "#{station.name}"
-      station.iterate_trains(block_trains)
+      station.each_train do |train|
+        print "  Поезд " , train.number , ", " , train.class.to_s , ". Вагонов: " , train.cars.length , "\n"
+        train.each_car do |car|
+          print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, #{car.to_s}. "
+          if car.is_a? PassengerCar
+            print "Мест: #{car.seats_total}, мест занято: #{car.seats_taken}\n"
+          else
+            print "Объём: #{car.capacity}, занято: #{car.capacity_taken}\n"
+          end
+        end
+      end
     end
     puts ""
   end
@@ -433,8 +422,8 @@ class Menu
     retry
   end
 
-  def list_all_train_cars(number)
-    block_cars = lambda do |car|
+  def list_all_train_cars(train_number)
+    storage.trains[train_number].each_car do |car|
       puts ""
       print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, "
       if car.is_a? PassengerCar
@@ -443,7 +432,6 @@ class Menu
         print "товарный. Объём: #{car.capacity}, занято: #{car.capacity_taken}" #почему последнее значение не печатает ноль?
       end
     end
-    storage.trains[number].iterate_cars(block_cars)
   end
 
   def create_dummy_package

@@ -55,6 +55,17 @@ class Storage
     cars_to_remove.times { @trains[number].car_remove }
   end
 
+  def occupy_car(train_number,car_number,occupation)
+    if @trains[train_number].is_a? PassengerTrain
+      occupation = occupation.to_i
+      occupation.times { @trains[train_number].cars[car_number].occupy_seat }
+    else
+      occupation = occupation.to_f
+      @trains[train_number].cars[car_number].occupy_space(occupation)
+    end
+    raise "введено некорректное число" if occupation == 0
+  end
+
   def assign_route_to_train(number,input_num)
     @trains[number].route(@routes[input_num])
   end
