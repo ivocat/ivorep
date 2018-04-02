@@ -414,14 +414,9 @@ class Menu
   end
 
   def list_all_train_cars(train_number)
+    puts ""
     storage.trains[train_number].each_car do |car|
-      puts ""
-      print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, "
-      if car.is_a? PassengerCar
-        print "пассажирский. Мест: #{car.seats_total}, мест занято: #{car.seats_taken}" #почему последнее значение не печатает ноль?
-      else
-        print "товарный. Объём: #{car.capacity}, занято: #{car.capacity_taken}" #почему последнее значение не печатает ноль?
-      end
+      print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, #{car.to_s}. #{car.info}\n"
     end
   end
 
