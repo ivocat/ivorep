@@ -156,7 +156,7 @@ class Menu
       else
         print "\n"
         station.each_train do |train|
-          print "  Поезд " , train.number , ", " , train.class.to_s , ". Вагонов: " , train.cars.length , "\n"
+          print "  Поезд " , train.info , "\n"
         end
       end
     end
@@ -382,11 +382,7 @@ class Menu
 
   def trains_list
     storage.trains.each.with_index(1) do |(train_number, train), index|
-      print "#{index}. #{train_number}".ljust(10) , "— "
-      print "#{train.class.to_s}.".ljust(14)
-      print "Вагонов нет." if train.cars.empty?
-      print "Вагонов: #{train.cars.length}." if train.cars.any?
-      puts ""
+      print "#{index}. " , train.info , "\n"
     end
   end
 
@@ -395,14 +391,9 @@ class Menu
     storage.stations.each_value do |station|
       puts "#{station.name}"
       station.each_train do |train|
-        print "  Поезд " , train.number , ", " , train.class.to_s , ". Вагонов: " , train.cars.length , "\n"
+        print "  Поезд " , train.info , "\n"
         train.each_car do |car|
-          print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, #{car.to_s}. "
-          if car.is_a? PassengerCar
-            print "Мест: #{car.seats_total}, мест занято: #{car.seats_taken}\n"
-          else
-            print "Объём: #{car.capacity}, занято: #{car.capacity_taken}\n"
-          end
+          print "    #{car.index_number}.".ljust(8) , "#{car.car_name}, #{car.to_s}. #{car.info}\n"
         end
       end
     end

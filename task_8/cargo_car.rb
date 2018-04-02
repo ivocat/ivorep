@@ -21,4 +21,8 @@ class CargoCar < TrainCar
   def to_s
     "товарный"
   end
+
+  def info
+    "Объём: #{self.capacity}, занято: #{self.capacity_taken}"
+  end
 end

@@ -83,6 +83,12 @@ class Train
     @route.stations[@location+1] #unless last_station?
   end
 
+  def info
+    info = "#{self.number}".ljust(6) + ", #{self.class.to_s}.".ljust(16)
+    info += "Вагонов нет." if self.cars.empty?
+    info += "Вагонов: #{self.cars.length}." if self.cars.any?
+  end
+
   protected
 
   #Методы ниже используются только другими методами, извне их вызывать незачем, но наследоваться должны

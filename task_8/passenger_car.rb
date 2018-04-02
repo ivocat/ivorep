@@ -21,4 +21,8 @@ class PassengerCar < TrainCar
   def to_s
     "пассажирский"
   end
+
+  def info
+    "Мест: #{self.seats_total}, мест занято: #{self.seats_taken}"
+  end
 end

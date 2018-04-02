@@ -56,6 +56,7 @@ class Storage
   end
 
   def occupy_car(train_number,car_number,occupation)
+    raise "введено некорректное число" if occupation == 0
     if @trains[train_number].is_a? PassengerTrain
       occupation = occupation.to_i
       occupation.times { @trains[train_number].cars[car_number].occupy_seat }
@@ -63,7 +64,6 @@ class Storage
       occupation = occupation.to_f
       @trains[train_number].cars[car_number].occupy_space(occupation)
     end
-    raise "введено некорректное число" if occupation == 0
   end
 
   def assign_route_to_train(number,input_num)

@@ -30,9 +30,7 @@ class Station
   end
 
   def each_train
-    @trains.each do |train|
-      yield train
-    end
+    @trains.each { |train| yield train }
   end
 
   protected
