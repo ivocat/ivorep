@@ -1,6 +1,6 @@
-require_relative "passenger_car"
-require_relative "instance_counter"
-require_relative "validator"
+require_relative 'passenger_car'
+require_relative 'instance_counter'
+require_relative 'validator'
 
 class Train
   include Manufacturer
@@ -76,22 +76,22 @@ class Train
   end
 
   def previous_station
-    @route.stations[@location-1] unless first_station?
+    @route.stations[@location - 1] unless first_station?
   end
 
   def next_station
-    @route.stations[@location+1] #unless last_station?
+    @route.stations[@location + 1] # unless last_station?
   end
 
   def info
-    info = "#{self.number}".ljust(6) + ", #{self.class.to_s}.".ljust(16)
-    info += "Вагонов нет." if self.cars.empty?
-    info += "Вагонов: #{self.cars.length}." if self.cars.any?
+    info = number.to_s.ljust(6) + ", #{self.class}.".ljust(16)
+    info += 'Вагонов нет.' if cars.empty?
+    info += "Вагонов: #{cars.length}." if cars.any?
   end
 
   protected
 
-  #Методы ниже используются только другими методами, извне их вызывать незачем, но наследоваться должны
+  # Методы ниже используются только другими методами, извне их вызывать незачем, но наследоваться должны
 
   def first_station?
     @location == 0
@@ -101,12 +101,12 @@ class Train
     @location == @route.stations.length - 1
   end
 
-  def valid_car?(new_car)
+  def valid_car?(_new_car)
     raise NotImplementedError, 'Описать в дочерних классах'
   end
 
   def validate!
-    raise "номер поезда не указан" if @number.empty?
-    raise "номер поезда указан в неверном формате" if @number !~ NUMBER_FORMAT
+    raise 'номер поезда не указан' if @number.empty?
+    raise 'номер поезда указан в неверном формате' if @number !~ NUMBER_FORMAT
   end
 end

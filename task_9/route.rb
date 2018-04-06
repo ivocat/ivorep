@@ -1,5 +1,5 @@
-require_relative "instance_counter"
-require_relative "validator"
+require_relative 'instance_counter'
+require_relative 'validator'
 
 class Route
   attr_reader :stations
@@ -17,7 +17,7 @@ class Route
     previous_num = @stations.index(previous_station)
     return if previous_num.nil? || previous_num == @stations.length - 1
     if previous_station != @stations[-1]
-      @stations.insert(previous_num + 1,station)
+      @stations.insert(previous_num + 1, station)
     end
   end
 

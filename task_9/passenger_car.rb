@@ -1,9 +1,9 @@
-require_relative "train_car"
+require_relative 'train_car'
 
 class PassengerCar < TrainCar
   attr_reader :seats_total, :seats_taken, :car_name
 
-  def initialize(car_name, seats_total, manufacturer = "РЖД")
+  def initialize(car_name, seats_total, manufacturer = 'РЖД')
     @car_name = car_name
     self.manufacturer = manufacturer
     @seats_total = seats_total
@@ -19,10 +19,10 @@ class PassengerCar < TrainCar
   end
 
   def to_s
-    "пассажирский"
+    'пассажирский'
   end
 
   def info
-    "Мест: #{self.seats_total}, мест занято: #{self.seats_taken}"
+    "Мест: #{seats_total}, мест занято: #{seats_taken}"
   end
 end

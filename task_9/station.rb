@@ -1,4 +1,4 @@
-require_relative "instance_counter"
+require_relative 'instance_counter'
 
 class Station
   attr_reader :trains, :name
@@ -26,7 +26,7 @@ class Station
   end
 
   def trains_by_type(desired_type)
-    @trains.select {|train| train.type == desired_type}
+    @trains.select { |train| train.type == desired_type }
   end
 
   def each_train
@@ -36,6 +36,6 @@ class Station
   protected
 
   def validate!
-    raise "вы не ввели имя станции" if name.empty?
+    raise 'вы не ввели имя станции' if name.empty?
   end
 end
