@@ -1,9 +1,9 @@
-require_relative 'train_car'
+require_relative "train_car"
 
 class CargoCar < TrainCar
   attr_reader :capacity, :capacity_taken, :car_name
 
-  def initialize(car_name, capacity, manufacturer = 'РЖД')
+  def initialize(car_name, capacity, manufacturer = "РЖД")
     @car_name = car_name
     self.manufacturer = manufacturer
     @capacity = capacity
@@ -19,10 +19,10 @@ class CargoCar < TrainCar
   end
 
   def to_s
-    'товарный'
+    "товарный"
   end
 
   def info
-    "Объём: #{capacity}, занято: #{capacity_taken}"
+    "Объём: #{self.capacity}, занято: #{self.capacity_taken}"
   end
 end

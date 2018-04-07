@@ -2,11 +2,11 @@ module Validator
   def valid?
     validate!
     true
-  rescue StandardError
+  rescue
     false
   end
 
   def validate!
-    raise NotImplementedError, 'Метод определения валидности не задан'
+    raise NotImplementedError, "Метод определения валидности не задан"
   end
 end

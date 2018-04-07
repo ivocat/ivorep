@@ -1,5 +1,5 @@
-require_relative 'instance_counter'
-require_relative 'validator'
+require_relative "instance_counter"
+require_relative "validator"
 
 class Route
   attr_reader :stations
@@ -15,15 +15,14 @@ class Route
 
   def add_train_stop(station, previous_station)
     previous_num = @stations.index(previous_station)
-    return if previous_num.nil? || previous_num == @stations.length - 1
-    if previous_station != @stations[-1]
-      @stations.insert(previous_num + 1, station)
-    end
+    raise "такой станции нет в маршруте" if previous_num.nil?
+    raise "нельзя добавить станцию после конечной" if previous_station == @stations.last
+    @stations.insert(previous_num + 1,station)
   end
 
   def remove_train_stop(station)
-    if station != @stations[0] && station != @stations[-1]
-      @stations.delete(station)
-    end
+    raise "нельзя удалить начальную станцию маршрута" if station == @stations.first
+    raise "нельзя удалить конечную станцию маршрута" if station == @stations.last
+    @stations.delete(station)
   end
 end
