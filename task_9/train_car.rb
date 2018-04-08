@@ -1,4 +1,4 @@
-require_relative "manufacturer"
+require_relative 'manufacturer'
 
 class TrainCar
   include Manufacturer
