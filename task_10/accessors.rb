@@ -1,9 +1,9 @@
 module Accessors
   def self.included(base)
-    base.include InstanceMethods
+    base.extend ClassMethods
   end
 
-  module InstanceMethods
+  module ClassMethods
     def attr_accessor_with_history(*attr_names)
       attr_names.each do |attr_name|
         var_name = "@#{attr_name}".to_sym
@@ -17,7 +17,7 @@ module Accessors
         define_method("#{attr_name}=".to_sym) do |value|
           arr = instance_variable_get("@#{attr_name}_history")
           arr ||= []
-          arr << new_value
+          arr << value
           instance_variable_set("@#{attr_name}_history", arr)
           instance_variable_set("@#{attr_name}", value)
         end
@@ -29,10 +29,9 @@ module Accessors
 
       define_method(attr_name) { instance_variable_get(var_name) }
 
-      define_method("#{name}=".to_sym) do |value|
-        instance_variable_set(var_name, value) if value.is_a?(@attr_klass) #???
+      define_method("#{attr_name}=".to_sym) do |value|
+        instance_variable_set("@#{attr_name}", value) if value.is_a?(attr_klass) #добавить raise?
       end
     end
   end
-
 end
