@@ -30,7 +30,11 @@ module Accessors
       define_method(attr_name) { instance_variable_get(var_name) }
 
       define_method("#{attr_name}=".to_sym) do |value|
-        instance_variable_set("@#{attr_name}", value) if value.is_a?(attr_klass) #добавить raise?
+        if value.is_a?(attr_klass)
+          instance_variable_set("@#{attr_name}", value)
+        else
+          raise "тип присваиваемого значение не совпадает с типом переменной"
+        end
       end
     end
   end
