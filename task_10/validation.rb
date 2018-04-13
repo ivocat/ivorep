@@ -7,7 +7,7 @@ module Validation
   module ClassMethods
     def validate(attr_name, validation_type, arg = nil)
       false
-      case validation_type
+      case validation_type.to_sym
       when :presence
         true if attr_name != "" && !attr_name.nil?
       when :format
@@ -20,12 +20,12 @@ module Validation
       end
     end
   end
-  
+
   module InstanceMethods
     def validate!
       self.class.validate #to be completed
     end
-    
+
     def valid?
       validate!
       true
