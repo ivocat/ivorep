@@ -13,7 +13,7 @@ class Train
   NUMBER_FORMAT = /^[А-Я\d]{3}-?[А-Я\d]{2}$/i
 
   validate :number, :presence
-  validate :number, :format, /^[А-Я\d]{3}-?[А-Я\d]{2}$/i
+  validate :number, :format, NUMBER_FORMAT
   validate :number, :type, String
 
   def initialize(number)

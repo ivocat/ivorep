@@ -442,10 +442,16 @@ class Menu
   def run_test_validations
     puts "Валидация станций..."
     puts Station.validations
-    storage.stations.each_value { |station| puts "#{station} #{station.name} #{station.name.class}, валидация: #{station.valid?}" }
-    puts "\nВалидация поездов..."
+    storage.stations.each_value do |station|
+      print "\n#{station} #{station.name}, валидация: "
+      print "#{station.valid?}"
+    end
+    puts "\n\nВалидация поездов..."
     puts Train.validations
-    storage.trains.each_value { |train| puts "#{train} #{train.number} #{train.valid?}" }
-    puts "Валидация закончена"
+    storage.trains.each_value do |train|
+      print "\n#{train} #{train.number}, валидация: "
+      print "#{train.valid?}"
+    end
+    puts "\nВалидация закончена"
   end
 end

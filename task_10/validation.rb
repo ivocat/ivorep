@@ -18,7 +18,8 @@ module Validation
     def valid?
       validate!
       true
-    rescue RuntimeError
+    rescue RuntimeError => e
+      puts "не прошла — #{e.message}"
       false
     end
 
