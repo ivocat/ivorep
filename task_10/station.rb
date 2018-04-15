@@ -1,14 +1,9 @@
 require_relative 'instance_counter'
-require_relative 'validation'
 
 class Station
   attr_reader :trains, :name
   include InstanceCounter
-  include Validation
   @@stations = []
-
-  validate :name, :presence
-  validate :name, :type, String
 
   def self.all
     @@stations
@@ -36,5 +31,11 @@ class Station
 
   def each_train
     @trains.each { |train| yield train }
+  end
+
+  protected
+
+  def validate!
+    raise 'вы не ввели имя станции' if name.empty?
   end
 end

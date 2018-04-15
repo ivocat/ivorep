@@ -2,8 +2,6 @@ require_relative 'train'
 require_relative 'cargo_car'
 
 class CargoTrain < Train
-  @validations = self.superclass.validations
-
   def self.to_s
     'товарный'
   end
