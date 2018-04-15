@@ -18,7 +18,7 @@ class Train
 
   def initialize(number)
     @number = number.to_s.upcase
-    validate_number!
+    validate!
     @cars = []
     @speed = 0
     @@trains[number] = self
@@ -105,12 +105,7 @@ class Train
     @location == @route.stations.length - 1
   end
 
-  def valid_car?(_new_car)
+  def valid_car?(new_car)
     raise NotImplementedError, 'Описать в дочерних классах'
-  end
-
-  def validate_number!
-    raise 'номер поезда не указан' if @number.empty?
-    raise 'номер поезда указан в неверном формате' if @number !~ NUMBER_FORMAT
   end
 end

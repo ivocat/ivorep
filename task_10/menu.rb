@@ -174,6 +174,9 @@ class Menu
       storage.create_station(name)
       puts "Станция #{storage.stations[name].name} создана!"
     end
+  rescue RuntimeError => e
+    puts "Ошибка ввода названия станции: #{e.message}."
+    retry
   end
 
   def create_route

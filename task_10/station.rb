@@ -16,7 +16,7 @@ class Station
 
   def initialize(name)
     @name = name
-    validate_name!
+    validate!
     @trains = []
     @@stations << self
     register_instance
@@ -36,11 +36,5 @@ class Station
 
   def each_train
     @trains.each { |train| yield train }
-  end
-
-  protected
-
-  def validate_name!
-    raise 'вы не ввели имя станции' if name.empty?
   end
 end
