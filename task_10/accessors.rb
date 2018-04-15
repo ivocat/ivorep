@@ -33,7 +33,7 @@ module Accessors
         if value.is_a?(attr_klass)
           instance_variable_set("@#{attr_name}", value)
         else
-          raise "тип присваиваемого значение не совпадает с типом переменной"
+          raise "тип присваиваемого значения не совпадает с типом переменной"
         end
       end
     end
