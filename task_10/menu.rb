@@ -17,7 +17,6 @@ class Menu
       puts '3. Конструктор поездов'
       puts '4. Управление поездами'
       puts '5. TEST: Полный список'
-      puts '6. TEST: Валидации'
       puts '9. Выход'
       print '> '
       input = gets.to_i
@@ -33,8 +32,6 @@ class Menu
         entry_4
       when 5
         exhaustive_list
-      when 6
-        run_test_validations
       when 9
         exit
       else
@@ -174,9 +171,6 @@ class Menu
       storage.create_station(name)
       puts "Станция #{storage.stations[name].name} создана!"
     end
-  rescue RuntimeError => e
-    puts "Ошибка ввода названия станции: #{e.message}."
-    retry
   end
 
   def create_route
@@ -440,21 +434,5 @@ class Menu
     storage.add_car_to_train('222-22', 'ГВ-1', 20)
     storage.assign_route_to_train('111-11', 0)
     storage.assign_route_to_train('222-22', 1)
-  end
-
-  def run_test_validations
-    puts "Валидация станций..."
-    puts Station.validations
-    storage.stations.each_value do |station|
-      print "\n#{station} #{station.name}, валидация: "
-      print "#{station.valid?}"
-    end
-    puts "\n\nВалидация поездов..."
-    puts Train.validations
-    storage.trains.each_value do |train|
-      print "\n#{train} #{train.number}, валидация: "
-      print "#{train.valid?}"
-    end
-    puts "\nВалидация закончена"
   end
 end
