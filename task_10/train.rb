@@ -1,16 +1,20 @@
 require_relative 'passenger_car'
 require_relative 'instance_counter'
-require_relative 'validator'
+require_relative 'validation'
 
 class Train
   include Manufacturer
   include InstanceCounter
-  include Validator
+  include Validation
   attr_reader :cars, :number, :speed
 
   @@trains = {}
 
   NUMBER_FORMAT = /^[А-Я\d]{3}-?[А-Я\d]{2}$/i
+
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :type, String
 
   def initialize(number)
     @number = number.to_s.upcase
@@ -101,12 +105,7 @@ class Train
     @location == @route.stations.length - 1
   end
 
-  def valid_car?(_new_car)
+  def valid_car?(new_car)
     raise NotImplementedError, 'Описать в дочерних классах'
-  end
-
-  def validate!
-    raise 'номер поезда не указан' if @number.empty?
-    raise 'номер поезда указан в неверном формате' if @number !~ NUMBER_FORMAT
   end
 end
