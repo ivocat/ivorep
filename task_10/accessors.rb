@@ -10,7 +10,7 @@ module Accessors
       end
 
       define_method("#{attr_name}=".to_sym) do |value|
-        history = instance_variable_get("@#{attr_name}_history")
+        history = public_send("#{attr_name}_history")
         history << value
         instance_variable_set("@#{attr_name}_history", history)
         instance_variable_set("@#{attr_name}", value)

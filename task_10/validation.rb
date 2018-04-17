@@ -5,13 +5,16 @@ module Validation
   end
 
   module ClassMethods
-    attr_reader :validations
     attr_accessor :latest_error
 
     def validate(attribute_name, validation_type, arg = nil)
       @validations ||= {}
       @validations[attribute_name] ||= []
       @validations[attribute_name] << {validation_type: validation_type, arg: arg}
+    end
+
+    def validations
+      instance_variable_get("@validations") || {}
     end
   end
 
@@ -27,20 +30,18 @@ module Validation
     protected
 
     def validate!
-      unless self.class.instance_variable_get("@validations").nil?
-        self.class.validations.each do |attribute_name, validation_array|
-          attribute = self.instance_variable_get("@#{attribute_name}")
-          validation_array.each do |validation_hash|
-            self.send("validate_#{validation_hash[:validation_type]}", \
-                      attribute_name, \
-                      attribute, \
-                      validation_hash[:arg])
-          end
+      self.class.validations.each do |attribute_name, validation_array|
+        attribute = self.instance_variable_get("@#{attribute_name}")
+        validation_array.each do |validation_hash|
+          self.send("validate_#{validation_hash[:validation_type]}", \
+                    attribute_name, \
+                    attribute, \
+                    validation_hash[:arg])
         end
       end
     end
 
-    def validate_presence(attribute_name, attribute, arg = nil)
+    def validate_presence(attribute_name, attribute, _ = nil)
       raise "атрибут #{attribute_name} не существует или пуст" if attribute.to_s.empty?
     end
 
