@@ -447,7 +447,11 @@ class Menu
     puts Station.validations
     storage.stations.each_value do |station|
       print "\n#{station} #{station.name}, валидация: "
-      print "#{station.valid?}"
+      if station.valid?
+        print "true"
+      else
+        print "false: #{station.class.latest_error.message}"
+      end
     end
     puts "\n\nВалидация поездов..."
     puts Train.validations
